@@ -14,7 +14,6 @@ export async function createChoice(req, res){
 
 export async function listChoice(req, res){
     const pollId = res.locals.pollId
-
     try {
         const choices = await choicesCollection.find({pollId}).toArray()
         res.send(choices)

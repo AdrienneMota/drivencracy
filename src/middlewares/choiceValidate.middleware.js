@@ -1,33 +1,25 @@
 import dayjs from "dayjs"
-import {choicesCollection, pollsCollection} from "../database/db.js"
 import { ObjectId } from "mongodb"
+import {choicesCollection, pollsCollection} from "../database/db.js"
 
-async function pollExist(pollId){
-    try {
-        const poll = await pollsCollection.findOne({_id: new ObjectId(pollId)})
-        if(!poll){
-            return res.status(404).send({message: "Enquete não encontrada."})
-        }
-    } catch (error) {
-        console.log(error)
-        res.sendStatus(500)
-    }
-}
 
 export async function choiceValidate(req, res, next){
     const {pollId, title} = req.body
-
-    try {
-        
-        pollExist(pollId)
-
-        const titleExist = await choicesCollection.findOne({title})
+    try {  
         if(!title){
             return res.sendStatus(422)
         }
-        if(titleExist){
+              
+        const poll = await pollsCollection.findOne({_id: new ObjectId(pollId)})
+        if(!poll){
+            return res.sendStatus(404)
+        }
+
+        const titleAlreadexist = await choicesCollection.findOne({title})
+        if(titleAlreadexist){
             return res.sendStatus(409)
         }
+
         if(!(dayjs().isBefore(poll.expireAt))){
             return res.sendStatus(403)
         }
@@ -43,11 +35,11 @@ export async function choiceValidate(req, res, next){
 
 export async function listChoiceValidate(req, res, next){
     const pollId = req.params.id
-
-    try {
-        
-        pollExist(pollId)
-
+    try {        
+        const poll = await pollsCollection.findOne({_id: new ObjectId(pollId)})
+        if(!poll){
+            return res.sendStatus(404)
+        }
         res.locals.pollId = pollId
         next()  
     } catch (error) {
