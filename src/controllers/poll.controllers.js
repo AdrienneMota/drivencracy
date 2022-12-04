@@ -8,7 +8,7 @@ export async function creatPoll(req, res){
         res.status(201).send(poll)
     } catch (error) {
         console.log(error)
-        res.sendSatatus(500)
+        res.sendStatus(500)
     }
 
 }
