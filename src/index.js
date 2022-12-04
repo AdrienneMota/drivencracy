@@ -11,4 +11,6 @@ app.use(pollRoute)
 app.use(choiceRoute)
 app.use(voteRoute)
 
-app.listen(5000, () => console.log(`Server is running in port: ${5000}`))
+const port = process.env.PORT || 5000
+
+app.listen(port, ()=>console.log(`Server is running in port: ${port}`))
