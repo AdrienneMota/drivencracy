@@ -1,5 +1,6 @@
 import dayjs from "dayjs"
 import customParseFormat from "dayjs/plugin/customParseFormat.js"
+dayjs.extend(customParseFormat)
 
 export function pollValidate(req, res, next){
     const poll = req.body    
