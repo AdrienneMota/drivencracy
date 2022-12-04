@@ -1,13 +1,12 @@
-const values = [{id: '1', votes: 100},
-    {id:'2', votes: 200},
-    {id:'3', votes: 350}];
+import customParseFormat from "../node_modules/dayjs/plugin/customParseFormat.js"
+import dayjs from "dayjs"
 
-const maisVotado = values.map(el => el.votes).reduce(function(prev, current) { 
-	return prev > current ? prev : current; 
-})
+dayjs.extend(customParseFormat)
 
-const vencedor = values.find( v => v.votes === maisVotado)
+const date = "01-12-2022"
 
+const newdate = dayjs(date, 'YYYY-MM-DD HH:mm').isValid()
 
-
-console.log(vencedor);
+if(!newdate){
+    console.log("data não valida")
+}

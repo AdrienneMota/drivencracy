@@ -38,18 +38,22 @@ export async function checkResult(req, res, next){
 
     try{
         const choicesMidlle = await choicesCollection.find({pollId}).toArray()
-        const choices = choicesMidlle.map(choice => choice._id)
+        const choices = choicesMidlle.map(choice => String(choice._id))
+    
         const topVoted = await votesCollection.aggregate([
-            // { $match: {choiceId: {$in: choices}} },
+            { $match: {choiceId: {$in: choices}} },
             { $group: {_id: "$choiceId", voteAmount: {$sum: 1}} },
             { $sort: {voteAmount: -1}}
         ]).toArray()
 
-        const winnerChoice = await choicesCollection.findOne({_id: new ObjectId(topVoted[0]._id)})
+
+        const choice = await choicesCollection.findOne({_id: new ObjectId(topVoted[0]._id)})
         const votes = topVoted[0].voteAmount
-        const winner = {winnerChoice, votes}
+        const result = { title: choice.title, votes }
+
+        const winner = {...poll, result}
         res.locals.winner = winner
-        console.log(votes)
+  
         next()
     } catch (error) {
         console.log(error)

@@ -1,4 +1,3 @@
-import { ObjectId } from "mongodb";
 import { choicesCollection, pollsCollection } from "../database/db.js";
 
 export async function createChoice(req, res){

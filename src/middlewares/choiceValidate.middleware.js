@@ -9,6 +9,10 @@ export async function choiceValidate(req, res, next){
         if(!title){
             return res.sendStatus(422)
         }
+
+        if(!(new ObjectId(pollId))){
+            return res.send("Não é um id")
+        }
               
         const poll = await pollsCollection.findOne({_id: new ObjectId(pollId)})
         if(!poll){

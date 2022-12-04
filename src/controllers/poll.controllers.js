@@ -1,11 +1,11 @@
 import { pollsCollection } from "../database/db.js"
 
 export async function creatPoll(req, res){
-    const {title, expireAt} = res.locals.poll
+    const poll = res.locals.poll
 
     try {
-        await pollsCollection.insertOne({title, expireAt})
-        res.sendStatus(201)
+        await pollsCollection.insertOne(poll)
+        res.status(201).send(poll)
     } catch (error) {
         console.log(error)
         res.sendSatatus(500)

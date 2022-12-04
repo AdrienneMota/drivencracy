@@ -8,3 +8,4 @@ voteRoute.post("/choice/:id/vote", voteValidate, createVote)
 voteRoute.get("/poll/:id/result", checkResult, showResult )
 
 export default voteRoute
+
