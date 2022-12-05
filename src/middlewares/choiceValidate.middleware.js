@@ -15,15 +15,15 @@ export async function choiceValidate(req, res, next){
         }
 
         const title = choice.title.toLowerCase()
+
         const poll = await pollsCollection.findOne({_id: new ObjectId(choice.pollId)})
         if(!poll){
             return res.sendStatus(404)
         }
 
         const choices = await choicesCollection.find({pollId: choice.pollId}).toArray()
-        console.log(choices)
         const titleAlreadexist = choices?.map(c => c.title).includes(title.toLowerCase())
-        console.log(titleAlreadexist)
+      
         if(titleAlreadexist){
             return res.sendStatus(409)
         }
@@ -41,7 +41,8 @@ export async function choiceValidate(req, res, next){
 }
 
 export async function listChoiceValidate(req, res, next){
-    const pollId = req.params.id
+   const pollId = req.params.id
+       
     try {        
         const poll = await pollsCollection.findOne({_id: new ObjectId(pollId)})
         if(!poll){

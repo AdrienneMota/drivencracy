@@ -4,6 +4,7 @@ import { choicesCollection, pollsCollection, votesCollection} from "../database/
 
 export async function voteValidate(req, res, next){
     const choiceId = req.params.id
+    
     try {
         const choice = await choicesCollection.findOne({_id: new ObjectId(choiceId)})
         if(!choice){

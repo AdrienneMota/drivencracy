@@ -4,8 +4,8 @@ import { Router } from "express"
 
 const voteRoute = Router()
 
-voteRoute.post("/choice/:id/vote", voteValidate, createVote)
-voteRoute.get("/poll/:id/result", checkResult, showResult )
+voteRoute.post("/choice/:id([0-9a-fA-F]{24})/vote", voteValidate, createVote)
+voteRoute.get("/poll/:id([0-9a-fA-F]{24})/result", checkResult, showResult )
 
 export default voteRoute
 

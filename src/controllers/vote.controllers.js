@@ -12,6 +12,6 @@ export async function createVote(req, res){
 }
 
 export async function showResult(req, res){
-    const choices = res.locals.winner
-    res.send(choices)
+    const winner = res.locals.winner
+    res.send(winner)
 }   
