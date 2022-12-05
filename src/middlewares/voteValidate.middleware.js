@@ -30,6 +30,7 @@ export async function voteValidate(req, res, next){
 
 export async function checkResult(req, res, next){
     const pollId = req.params.id
+    let result
 
     const poll = await pollsCollection.findOne({_id: new ObjectId(pollId)})
     if(!poll){
@@ -46,11 +47,17 @@ export async function checkResult(req, res, next){
             { $sort: {voteAmount: -1}}
         ]).toArray()
 
-
         const choice = await choicesCollection.findOne({_id: new ObjectId(topVoted[0]._id)})
-        const votes = topVoted[0].voteAmount
-        const result = { title: choice.title, votes }
 
+        const empate = topVoted.filter(v => v.voteAmount === topVoted[0].voteAmount)
+
+        if(empate.length > 1){
+            result = "Ganhador ainda não definido..."
+        }else{
+            const votes = topVoted[0].voteAmount
+            result = { title: choice.title, votes }
+        }
+     
         const winner = {...poll, result}
         res.locals.winner = winner
   

@@ -1,21 +1,29 @@
 import dayjs from "dayjs"
 import { ObjectId } from "mongodb"
 import {choicesCollection, pollsCollection} from "../database/db.js"
+import choiceSchema from "../schemas/choice.schema.js"
 
 
 export async function choiceValidate(req, res, next){
-    const {pollId, title} = req.body
+    const choice = req.body
     try {  
-        if(!title){
-            return res.sendStatus(422)
+        
+        const { error } = choiceSchema.validate(choice, {abortEarly: false})
+        if(error){
+            const erros = error.details.map(detail => detail.message)
+            return res.status(422).send(erros)
         }
-              
-        const poll = await pollsCollection.findOne({_id: new ObjectId(pollId)})
+
+        const title = choice.title.toLowerCase()
+        const poll = await pollsCollection.findOne({_id: new ObjectId(choice.pollId)})
         if(!poll){
             return res.sendStatus(404)
         }
 
-        const titleAlreadexist = await choicesCollection.findOne({title: title.toLowerCase()})
+        const choices = await choicesCollection.find({pollId: choice.pollId}).toArray()
+        console.log(choices)
+        const titleAlreadexist = choices?.map(c => c.title).includes(title.toLowerCase())
+        console.log(titleAlreadexist)
         if(titleAlreadexist){
             return res.sendStatus(409)
         }
@@ -24,7 +32,6 @@ export async function choiceValidate(req, res, next){
             return res.sendStatus(403)
         }
 
-        const choice = {title, pollId}
         res.locals.choice = choice
         next()
     } catch (error) {

@@ -1,10 +1,10 @@
 import { choicesCollection, pollsCollection } from "../database/db.js";
 
 export async function createChoice(req, res){
-    const {title, pollId} = res.locals.choice
+    const choice = res.locals.choice
     try {
-        await choicesCollection.insertOne({title, pollId})
-        res.status(201).send({title, pollId})
+        await choicesCollection.insertOne(choice)
+        res.status(201).send(choice)
     } catch (error) {
         console.log(error)
         res.sendStatus(500)
